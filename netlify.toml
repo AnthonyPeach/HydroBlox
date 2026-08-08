@@ -1,0 +1,16 @@
+[build]
+  publish = "."
+
+# Serve pretty URLs (/specs not /specs/index.html)
+[[redirects]]
+  from = "https://hydroblox.com/*"
+  to = "https://www.hydroblox.com/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

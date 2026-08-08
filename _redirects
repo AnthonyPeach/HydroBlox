@@ -1,0 +1,23 @@
+# --- hydrobloxtech.com  ->  www.hydroblox.com (301, authority-preserving) ---
+# NOTE: point hydrobloxtech.com at this site in Netlify domain settings, then these apply.
+https://hydrobloxtech.com/*            https://www.hydroblox.com/:splat   301!
+https://www.hydrobloxtech.com/*        https://www.hydroblox.com/:splat   301!
+
+# path-level moves (old tech-site slugs -> new consolidated homes)
+/how-it-works            /specs/how-it-works            301
+/installation-guide      /specs/installation           301
+/downloads               /specs/downloads              301
+/hydroplanks             /products/hydroplanks         301
+/transition-boxes        /products/transition-boxes    301
+/stormwater-system       /products/stormwater-system   301
+/hydronoodles            /products/hydronoodles        301
+/turf-sports             /specs/turf-sports            301
+/solar-wind              /specs/solar-wind             301
+/slope-stabilization     /specs/slope-stabilization    301
+/stormwater-filtering    /specs/stormwater-filtering   301
+/roadway-underdrains     /specs/roadway-underdrains    301
+/railroad                /specs/railroad               301
+/news                    /blog                         301
+
+# SPA legacy hash routes, if any were indexed
+/index.html              /                             301
