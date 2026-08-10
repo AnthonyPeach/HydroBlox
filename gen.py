@@ -36,7 +36,20 @@ URL = {k:("/" if k=="index" else "/"+k.replace("/index","")) for k in H1}
 
 # ---- parse titles/descriptions from SEO map ----
 TITLE={}; DESC={}
-md=open('/mnt/user-data/outputs/hydroblox-seo-map.md').read()
+HERE=os.path.dirname(os.path.abspath(__file__))
+def _read(*names):
+    """Return the contents of the first readable file among names (script-relative), else ''."""
+    for n in names:
+        p=n if os.path.isabs(n) else os.path.join(HERE,n)
+        if os.path.exists(p):
+            return open(p,encoding='utf-8').read()
+    return ''
+# SEO map is optional: if absent, TITLE/DESC stay empty and head() falls back to defaults.
+md=_read('hydroblox-seo-map.md','_seo/hydroblox-seo-map.md')
+
+def _skip_href(body):
+    """True for links that must NOT be re-prefixed: protocol (tel:/mailto:/http:), //, or #anchors."""
+    return bool(re.match(r'(?:[a-z][a-z0-9+.\-]*:|//|#)', body, re.I))
 # map md headers to our route keys
 route_by_url={
  "/":"index","/about":"about","/sustainability":"sustainability","/gallery":"gallery","/blog":"blog",
@@ -64,8 +77,8 @@ for b in blocks:
         k=route_by_url[url]
         TITLE[k]=t.group(1).replace('²','2'); DESC[k]=d.group(1).replace('²','2').replace('—','-')
 
-NAV=open('_nav.html').read()
-FOOT=open('_footer.html').read()
+NAV=_read('.nav-template.html','_nav.html')
+FOOT=_read('.footer-template.html','_footer.html')
 
 def prefix(route):
     d=route.count("/")
@@ -78,8 +91,8 @@ def nav(route):
     n=NAV
     # the extracted nav was generated with '../' (specs depth). Re-point all href="../X" and href="X" to this page's prefix.
     # Normalise: strip any leading ../ sequences then re-add px.
-    n=re.sub(r'href="(?:\.\./)*([^"]*)"', lambda m: f'href="{px}{m.group(1)}"', n)
-    n=re.sub(r"location\.href='(?:\.\./)*([^']*)'", lambda m: f"location.href='{px}{m.group(1)}'", n)
+    n=re.sub(r'href="(?:\.\./)*([^"]*)"', lambda m: m.group(0) if _skip_href(m.group(1)) else f'href="{px}{m.group(1)}"', n)
+    n=re.sub(r"location\.href='(?:\.\./)*([^']*)'", lambda m: m.group(0) if _skip_href(m.group(1)) else f"location.href='{px}{m.group(1)}'", n)
     # active state
     n=re.sub(r'\s?class="active"','',n); n=re.sub(r'ndrop active','ndrop',n)
     seg=route.split('/')[0]
@@ -92,7 +105,7 @@ def nav(route):
 
 def footer(route):
     px=prefix(route); f=FOOT
-    f=re.sub(r'href="(?:\.\./)*([^"]*)"', lambda m: f'href="{px}{m.group(1)}"', f)
+    f=re.sub(r'href="(?:\.\./)*([^"]*)"', lambda m: m.group(0) if _skip_href(m.group(1)) else f'href="{px}{m.group(1)}"', f)
     return f
 
 def head(route):
