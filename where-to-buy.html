@@ -214,6 +214,7 @@
 <script>
 window.addEventListener('scroll',function(){document.getElementById('siteNav').classList.toggle('scrolled',window.scrollY>40)});
 document.querySelectorAll('.faq-item').forEach(function(f){f.addEventListener('click',function(){this.classList.toggle('open')})});
+function switchWtb(i){document.querySelectorAll('.wtb-tab').forEach(function(t,idx){t.classList.toggle('active',idx===i);});document.querySelectorAll('.wtb-panel').forEach(function(p){p.classList.toggle('active',p.id==='wtb-'+i);});}
 (function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('v');});return;}var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('v');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px'});els.forEach(function(e){io.observe(e);});})();
 </script>
 </body>
