@@ -10,7 +10,8 @@ https://www.hydrobloxtech.com/*        https://www.hydroblox.com/:splat   301!
 /hydroplanks             /products/hydroplanks         301
 /transition-boxes        /products/transition-boxes    301
 /stormwater-system       /products/stormwater-system   301
-/hydronoodles            /products/hydronoodles        301
+/hydronoodles            /products/corners-junctions   301
+/products/hydronoodles   /products/corners-junctions   301
 /turf-sports             /specs/turf-sports            301
 /solar-wind              /specs/solar-wind             301
 /slope-stabilization     /specs/slope-stabilization    301
