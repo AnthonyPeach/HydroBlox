@@ -225,7 +225,7 @@ img{max-width:100%;display:block}
 ═══════════════════════════════════════════ */
 .hero {
   background: linear-gradient(150deg, #f0fdf9 0%, #ccfbf1 45%, #ecfeff 100%);
-  min-height: 100svh; display: grid; grid-template-rows: 1fr auto;
+  min-height: 74vh; display: grid; grid-template-rows: 1fr auto;
   padding-top: 68px; position: relative; overflow: hidden; border-bottom: 1px solid var(--border);
 }
 .hero::before {
@@ -704,3 +704,13 @@ img{max-width:100%;display:block}
 .blog-card p{font-size:13px;color:var(--slate);line-height:1.6;flex:1}
 .blog-card-date{font-size:11px;color:var(--muted);margin-top:12px}
 @media(max-width:860px){.post-header{padding:100px 5% 48px}.post-body{padding:44px 6%}}
+
+/* ── polish ── */
+.app-card{transition:box-shadow .2s,transform .2s}
+.app-card:hover{box-shadow:0 8px 24px rgba(12,26,46,.08);transform:translateY(-2px)}
+.blog-card .blog-card-date{transition:color .2s}
+.blog-card:hover .blog-card-date{color:var(--sky)}
+.spec-cell{transition:background .2s}
+.spec-cell:hover{background:#f7fdfd}
+.hero-content{padding-top:56px}
+@media(max-width:860px){.hero{min-height:auto}}
