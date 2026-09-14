@@ -1,0 +1,115 @@
+name: Blog Auto-Publish
+
+# Fully hands-off blog pipeline for the HydroBlox site.
+# Twice weekly (Mon + Thu ~9am ET) AND on-demand, Claude Code writes one on-brand post,
+# refills the topic queue, then this workflow commits it to a branch, opens a PR, and
+# auto-merges to `main` — which triggers Netlify's git-linked auto-deploy.
+#
+# NOTE: whatever Claude writes AUTO-PUBLISHES (no human review gate), by design.
+
+on:
+  schedule:
+    # 13:00 UTC on Monday and Thursday (~9am ET during EDT, ~8am ET during EST).
+    - cron: "0 13 * * 1,4"
+  workflow_dispatch: {}
+
+# Serialize runs so PRs never pile up or collide. Queue, don't cancel.
+concurrency:
+  group: blog-autopublish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      # Model used to write the post. Change here if this API account lacks access.
+      CLAUDE_MODEL: claude-sonnet-5
+    steps:
+      # ---- Clean skip if the API key isn't configured yet (stays green, no failure email) ----
+      - name: Guard on ANTHROPIC_API_KEY
+        id: guard
+        run: |
+          if [ -z "${ANTHROPIC_API_KEY}" ]; then
+            echo "ANTHROPIC_API_KEY is not set — skipping. Add it in repo Settings → Secrets to enable."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        if: steps.guard.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Claude Code CLI
+        if: steps.guard.outputs.skip != 'true'
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Write the post + refill the topic queue
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          claude -p "You are the HydroBlox automated blog author running in CI at the repo root. \
+          Read .claude/blog-playbook.md and follow it EXACTLY. Read .claude/blog-topics.md and pick the FIRST line that does NOT begin with '[done]' as your topic. \
+          Write ONE complete blog post for that topic: (1) create blog/<slug>.html from the playbook template, copying the <nav>, <div class=\"mob-nav\">, <footer>, and the closing <script> block VERBATIM from an existing blog/*.html post; (2) prepend exactly one card as the first child of the main grid div.blog-grid inside div#page-blog in blog.html (do NOT edit the data-guide-count number — it is JS-computed); (3) add exactly one <url> line for the post among the /blog/ entries in sitemap.xml; (4) in .claude/blog-topics.md, prepend '[done] ' to the exact line you used. \
+          Then, if fewer than 8 lines in .claude/blog-topics.md lack a '[done]' prefix, append about 12 fresh, on-brand, national-generic, legally-safe topics (one per line, no prefix), deduped against the existing lines and every title already in blog/. \
+          Obey CLAUDE.md legal claim rules and the playbook DO-NOT list. Do NOT run git, do NOT deploy, and do NOT edit any file the playbook does not list. When finished, print the path of the new post file and its <title>." \
+          --dangerously-skip-permissions \
+          --allowedTools "Read,Write,Edit,Glob,Grep" \
+          --model "${CLAUDE_MODEL}"
+
+      - name: Commit, open PR, and auto-merge
+        if: steps.guard.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "hydroblox-blog-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Identify the newly created post (fail loudly if none — that's a real problem the monitor should catch).
+          NEWPOST="$(git ls-files --others --exclude-standard -- 'blog/*.html' | head -n1)"
+          if [ -z "${NEWPOST}" ]; then
+            echo "::error::Claude did not create a new blog post file. Nothing to publish."
+            exit 1
+          fi
+          TITLE="$(grep -oP '(?<=<title>).*?(?=</title>)' "${NEWPOST}" | head -n1 || true)"
+          [ -z "${TITLE}" ] && TITLE="New HydroBlox blog post"
+
+          BRANCH="blog/auto-$(date -u +%Y%m%d-%H%M%S)"
+          git checkout -b "${BRANCH}"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "::error::No staged changes after writing the post."
+            exit 1
+          fi
+          git commit -m "blog: ${TITLE}" -m "Automated post via the blog pipeline. Co-Authored-By: Claude <noreply@anthropic.com>"
+          git push origin "${BRANCH}"
+
+          gh pr create --base main --head "${BRANCH}" \
+            --title "blog: ${TITLE}" \
+            --body "Automated HydroBlox blog post. New file: \`${NEWPOST}\`. Auto-merging per the hands-off pipeline."
+
+          # Auto-merge with a short retry (handles brief 'not mergeable yet' windows).
+          merged=false
+          for i in 1 2 3 4 5; do
+            if gh pr merge "${BRANCH}" --merge --delete-branch; then
+              merged=true; echo "Merged on attempt ${i}."; break
+            fi
+            echo "Merge attempt ${i} failed; retrying in 15s..."; sleep 15
+          done
+          if [ "${merged}" != "true" ]; then
+            echo "::error::Auto-merge failed after retries. Check branch protection and the 'Allow GitHub Actions to create and approve pull requests' setting."
+            exit 1
+          fi
