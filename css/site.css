@@ -56,14 +56,24 @@ img{max-width:100%;display:block}
 .nav-menu > li > a:hover, .nav-menu > li > .ndrop:hover { color: var(--navy); background: var(--off); }
 .nav-menu > li > a.active { color: var(--sky); font-weight: 600; }
 .nav-menu > li > .ndrop.active { color: var(--sky); font-weight: 600; }
-.ndrop::after { content: '▾'; font-size: 9px; margin-left: 2px; }
+.ndrop::after { content: '▾'; font-size: 9px; margin-left: 2px; transition: transform .15s; }
+.nav-menu > li.open > .ndrop::after { transform: rotate(180deg); }
 .ndrop-menu {
   display: none; position: absolute; top: calc(100% + 6px); left: 0;
   background: var(--white); border: 1px solid var(--border);
   border-radius: 10px; padding: 6px; min-width: 210px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
 }
-.nav-menu > li:hover .ndrop-menu { display: block; }
+/* transparent bridge across the 6px gap so a mouse moving from the caret to
+   the menu never crosses a dead zone that would flicker it shut */
+.ndrop-menu::before { content: ''; position: absolute; left: 0; right: 0; top: -8px; height: 8px; }
+/* click/tap latch — works on every pointer type, the reliable path on touch */
+.nav-menu > li.open .ndrop-menu { display: block; }
+/* hover reveal is a bonus for real mouse pointers only; on touch, :hover
+   emulation would latch the menu open (the "press 3-4 times to dismiss" bug) */
+@media (hover: hover) and (pointer: fine) {
+  .nav-menu > li:hover .ndrop-menu { display: block; }
+}
 .ndrop-menu a { display: block; padding: 9px 14px; font-size: 13px; color: var(--slate); border-radius: 6px; cursor: pointer; }
 .ndrop-menu a:hover { background: var(--off); color: var(--navy); }
 .nav-cta-btn {
