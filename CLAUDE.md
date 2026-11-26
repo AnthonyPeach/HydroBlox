@@ -10,11 +10,13 @@ This is the consolidated HydroBlox marketing site. It replaces two Wix sites
 - The homepage was migrated out of a single-file SPA into real, indexable pages. Do not reintroduce SPA/JS view-switching — every page must be a real URL for SEO.
 
 ## Brand system (do not drift)
-- Fonts: **DM Serif Display** (headlines) + **DM Sans** (body). Data/labels in a mono.
-- Tokens (in `css/site.css`): navy `#0c1a2e`, sky `#0891b2`, sky2 `#22d3ee`, teal `#0f766e`, green `#059669`, off-white `#f4fbfb`, border `#d8eaec`.
+- Source of truth: **HydroBlox Brand Guidelines (2026)**. Logo = ribbon drop + "Hydro" (Fraunces 800) + "*Blox*" (Source Serif 4 Italic, Flow Teal) + byline "MOVING WATER RESPONSIBLY" (tracked Inter caps). Never restyle or recolor it.
+- Logo on the site: `.logo` lockup in `.nav-template.html` / `.footer-template.html` (drop images `img/hydroblox-drop.png`, `img/hydroblox-drop-reverse.png` for dark backgrounds). Favicon/app icon = drop in a navy tile (`img/favicon-32.png`, `img/apple-touch-icon.png`, `img/icon-512.png`). Share image `img/hydroblox-social.jpg`.
+- Fonts: **Fraunces 800** every headline, always upright; the italic payoff (`<em>` in a heading) in **Source Serif 4 Italic**, teal; **Inter** body; **JetBrains Mono** labels.
+- Colors (tokens in `css/site.css`): Deep Navy `#0E1F2F` (`--navy`), Flow Teal `#13819B` (`--sky`: "Blox", emphasis, buttons), Water `#2BA9C4` (`--sky2`: accents on navy), Mint `#E3F7F3` (`--mint`: washes), Paper `#F3FBF9` (`--off`: page background). `--teal` `#0E6B80` is the darker hover shade.
 - Signature: navy→teal diagonal gradients; alternating white/off "ruled" section bands; the pressure-fed "0.0% grade" mechanism diagram.
 - Four cutaway feature icons (Clog-Free, Natural Pressure, 40,000 lbs, 100% Recycled) live on the homepage benefit cards. Light variants on light sections.
-- The site is currently **image-free by design**: real photos were removed, `.img-ph` placeholders hold every slot, logo is a text wordmark. Drop real assets into `/img` and replace placeholders.
+- Photos are still missing: `.img-ph` placeholders hold every photo slot. Drop real assets into `/img` and replace placeholders.
 
 ## Positioning (the messaging spine)
 - Dual-track: **circularity hooks, drainage converts.** "Waste in. Infrastructure out." is the attention line; the spec data closes.

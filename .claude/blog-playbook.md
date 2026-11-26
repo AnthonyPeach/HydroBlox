@@ -82,8 +82,10 @@ The canonical reference is [`blog/hydroblox-vs-french-drains.html`](../blog/hydr
 <meta name="twitter:description" content="{{META_DESCRIPTION}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=Source+Serif+4:ital,opsz,wght@1,8..60,600;1,8..60,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/site.css">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../img/apple-touch-icon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "{{HEADLINE}}", "description": "{{META_DESCRIPTION}}", "datePublished": "{{ISO_DATE}}", "dateModified": "{{ISO_DATE}}", "author": {"@type": "Organization", "name": "HydroBlox", "url": "https://www.hydroblox.com/"}, "publisher": {"@type": "Organization", "name": "HydroBlox", "url": "https://www.hydroblox.com/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.hydroblox.com/blog/{{SLUG}}"}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.hydroblox.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.hydroblox.com/blog"}, {"@type": "ListItem", "position": 3, "name": "{{HEADLINE}}", "item": "https://www.hydroblox.com/blog/{{SLUG}}"}]}</script>
 </head>
@@ -229,5 +231,5 @@ no `[done]` prefix on the new ones.
 - ❌ Never hardcode or edit an on-page count (e.g. the guides count) — it is JS-computed.
 - ❌ No dependencies, no `package.json`, no build tools, no new CSS files, no files
   outside this repo, no images (the site is image-free by design; `img/hydroblox-social.jpg`
-  is a referenced-but-absent OG image handled at go-live — do not create local images).
+  is the brand share image (already in /img) — do not create or change images).
 - ❌ Never violate a `../CLAUDE.md` legal claim rule, even if a topic seems to invite it.
