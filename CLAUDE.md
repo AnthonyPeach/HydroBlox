@@ -46,7 +46,7 @@ transition-box sizes, warranty terms. Also: replace the gmail contact address wi
 ## Structure
 ```
 index.html  about  sustainability  gallery  blog  where-to-buy  contact
-products/{hydroplanks,stormwater-system,hydronoodles,transition-boxes}
+products/{hydroplanks,stormwater-retention-box,hydronoodles,transition-boxes}
 specs/index + {how-it-works,installation,downloads,roadway-underdrains,railroad,
                slope-stabilization,turf-sports,solar-wind,stormwater-filtering}
 legal/{privacy-policy,terms}

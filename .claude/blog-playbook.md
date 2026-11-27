@@ -185,7 +185,7 @@ do not invent one.
 - **2–4 inline internal links in the body prose**, to named money/service pages, with
   anchor text that matches the destination. Valid targets and correct relative paths:
   `../contact.html`, `../where-to-buy.html`, `../products/hydroplanks.html`,
-  `../products/stormwater-system.html`, `../products/corners-junctions.html`,
+  `../products/stormwater-retention-box.html`, `../products/corners-junctions.html`,
   `../products/transition-boxes.html`, `../specs/how-it-works.html`,
   `../specs/installation.html`, `../specs/index.html`, and the application spec pages
   (`../specs/turf-sports.html`, `../specs/roadway-underdrains.html`,
