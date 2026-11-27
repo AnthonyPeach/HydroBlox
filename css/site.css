@@ -755,3 +755,7 @@ h1 em,h2 em,h3 em,h4 em,.serif-h2 em,.mech-grade em{font-family:var(--serif-ital
   .logo-word{font-size:24px}
   .logo-byline{font-size:6.3px}
 }
+
+/* About: Technical Resources section stacks on tablets/phones */
+@media(max-width:900px){.tech-split{grid-template-columns:1fr!important;gap:36px!important}}
+@media(max-width:600px){.tech-panel{padding:12px!important;min-height:0!important}}
